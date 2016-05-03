@@ -6,6 +6,7 @@ var autoprefixer = require('autoprefixer');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+var OpenBrowserPlugin = require('open-browser-webpack-plugin');
 
 /**
  * Env
@@ -14,6 +15,7 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 var ENV = process.env.npm_lifecycle_event;
 var isTest = ENV === 'test' || ENV === 'test-watch';
 var isProd = ENV === 'build';
+var appUrl = 'http://localhost:8080/';
 
 module.exports = function makeWebpackConfig () {
   /**
@@ -45,7 +47,7 @@ module.exports = function makeWebpackConfig () {
 
     // Output path from the view of the page
     // Uses webpack-dev-server in development
-    publicPath: isProd ? '/' : 'http://localhost:8080/',
+    publicPath: isProd ? '/' : appUrl,
 
     // Filename for entry points
     // Only adds hash in build mode
@@ -151,6 +153,8 @@ module.exports = function makeWebpackConfig () {
    * List: http://webpack.github.io/docs/list-of-plugins.html
    */
   config.plugins = [];
+  
+  config.plugins.push(new OpenBrowserPlugin({ url: appUrl }));
 
   // Skip rendering index.html in test mode
   if (!isTest) {
